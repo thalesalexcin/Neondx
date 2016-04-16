@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        
         _AddNextBlock();
         BlockCtrl.SpeedMultiplier = GameManager.speed;
     }

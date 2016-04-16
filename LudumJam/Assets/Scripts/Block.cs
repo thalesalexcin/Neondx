@@ -3,16 +3,18 @@ using System.Collections;
 
 public class Block : MonoBehaviour 
 {
-    public Color AliveColor;
-    public Color DestroyedColor;
+    public Sprite TurnedOnSprite;
+    public Sprite TurnedOffSprite;
 
     public bool Destroyed;
+    public bool TurnedOff;
     private SpriteRenderer _SpriteRenderer;
 
     void OnValidate()
     {
         _SpriteRenderer = GetComponent<SpriteRenderer>();
         _UpdateSprite();
+        TurnedOff = Destroyed;
     }
 
     void Awake()
@@ -30,24 +32,24 @@ public class Block : MonoBehaviour
     private void _UpdateSprite()
     {
         if (Destroyed)
-            _Destroy();
+            _TurnOff();
         else
-            _Revive();
+            _TurnOn();
     }
 
-    private void _Destroy()
+    private void _TurnOff()
     {
-        _SpriteRenderer.color = DestroyedColor;   
+        _SpriteRenderer.sprite = TurnedOffSprite;   
     }
 
-    private void _Revive()
+    private void _TurnOn()
     {
-        _SpriteRenderer.color = AliveColor;
+        _SpriteRenderer.sprite = TurnedOnSprite;
     }
 
     internal void Reset()
     {
         Destroyed = false;
-        _Revive();
+        _TurnOn();
     }
 }
