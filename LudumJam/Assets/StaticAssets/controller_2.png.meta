@@ -1,9 +1,10 @@
 fileFormatVersion: 2
 guid: cdb7c931e74d66541b84a39394328318
-timeCreated: 1460834086
+timeCreated: 1460842270
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: controller_2_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -38,18 +39,33 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 0.001
+  spritePixelsToUnits: 50
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: controller_2_0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 14
+        width: 160
+        height: 85
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -80, y: 42.5}
+        - {x: -80, y: -42.5}
+        - {x: 80, y: -42.5}
+        - {x: 80, y: 42.5}
     outline: []
   spritePackingTag: 
   userData: 

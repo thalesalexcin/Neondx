@@ -57,14 +57,19 @@ public class BlockController : MonoBehaviour
 
         if (_CurrentTimer >= TurnDuration)
         {
-            _CurrentBlockSet.transform.Translate(_GetSpeed(), 0, 0);
+            _Translate(_GetSpeed(), 0, 0);
             _CurrentTimer -= TurnDuration;
         }
     }
 
     private void _ContinousTranslation()
     {
-        _CurrentBlockSet.transform.Translate(_GetSpeed() * Time.deltaTime, 0, 0);
+        _Translate(_GetSpeed() * Time.deltaTime, 0, 0);
+    }
+
+    private void _Translate(float x, float y, float z)
+    {
+        _CurrentBlockSet.transform.parent.Translate(x,y,z);
     }
 
     private float _GetSpeed()

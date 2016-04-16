@@ -5,17 +5,18 @@ public class GameController : MonoBehaviour
 {
     public CursorController CursorCtrl;
     public BlockController BlockCtrl;
-    public GameObject ActorsParent;
     public GameManager GameManager;
 
-    public Transform ValidBlockSetReferencePosition;
-    public Transform BlankBlockSetReferencePosition;
+    public GameObject ValidArea;
+    public GameObject BlockArea;
+
+    private Vector3 _OldBlockAreaPosition;
 
     private GameObject _CurrentValidationBlocks;
 
     void Start()
     {
-        
+        _OldBlockAreaPosition = BlockArea.transform.position;
         _AddNextBlock();
         BlockCtrl.SpeedMultiplier = GameManager.speed;
     }
@@ -42,7 +43,7 @@ public class GameController : MonoBehaviour
         var blockSet = _InstantiateBlankBlockSet(validBlockSet);
         BlockCtrl.SetBlockSet(blockSet);
 
-        var cursor = _InstantiateCursor(blockSet);
+        var cursor = _InstantiateCursor(BlockArea);
         CursorCtrl.SetCursor(cursor);
     }
 
@@ -51,7 +52,8 @@ public class GameController : MonoBehaviour
         var cursorPrefab = _GetNextCursor();
         var cursor = Instantiate(cursorPrefab);
         cursor.transform.parent = blockSet.transform;
-        cursor.transform.localPosition = Vector2.zero;
+        cursor.transform.localPosition = Vector3.zero;
+        cursor.transform.localScale = Vector3.one;
         return cursor;
     }
 
@@ -71,15 +73,18 @@ public class GameController : MonoBehaviour
             DestroyObject(_CurrentValidationBlocks);
 
         _CurrentValidationBlocks = Instantiate(blockSet);
-        _CurrentValidationBlocks.transform.parent = ActorsParent.transform;
-        _CurrentValidationBlocks.transform.position = ValidBlockSetReferencePosition.transform.position;
+        _CurrentValidationBlocks.transform.parent = ValidArea.transform;
+        _CurrentValidationBlocks.transform.localScale = Vector3.one;
+        _CurrentValidationBlocks.transform.localPosition = Vector3.zero;
     }
 
     private GameObject _InstantiateBlankBlockSet(GameObject blockSet)
     {
         var blankBlockSet = Instantiate(blockSet);
-        blankBlockSet.transform.parent = ActorsParent.transform;
-        blankBlockSet.transform.position = BlankBlockSetReferencePosition.transform.position;
+        BlockArea.transform.position = _OldBlockAreaPosition;
+        blankBlockSet.transform.parent = BlockArea.transform;
+        blankBlockSet.transform.localPosition = Vector3.zero;
+        blankBlockSet.transform.localScale = Vector3.one;
         return blankBlockSet;
     }
 }

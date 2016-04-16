@@ -31,38 +31,43 @@ public class CursorController : MonoBehaviour
 
     private void _ProcessInputs()
     {
-        Vector2 cursorDisplacement = _GetCursorDisplacement();
+        Vector3 cursorDisplacement = _GetCursorDisplacement();
         List<Collider2D> hits = _GetTouchedBlocks(cursorDisplacement);
 
         if (hits.Any())
-            _CurrentCursor.transform.Translate(cursorDisplacement, Space.World);
+            _CurrentCursor.transform.localPosition = _CurrentCursor.transform.localPosition + cursorDisplacement;
 
         if (Input.GetKeyDown(KeyCode.Space))
             foreach (var hit in hits)
                 hit.GetComponent<Block>().Toggle();
     }
 
-    private static Vector2 _GetCursorDisplacement()
+    private Vector3 _GetCursorDisplacement()
     {
-        Vector2 cursorDisplacement = new Vector2();
+        Vector3 cursorDisplacement = new Vector3();
+
+        var unit = 1.45f;
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
-            cursorDisplacement.y += 1;
+            cursorDisplacement.y += unit;
         if (Input.GetKeyDown(KeyCode.DownArrow))
-            cursorDisplacement.y -= 1;
+            cursorDisplacement.y -= unit;
         if (Input.GetKeyDown(KeyCode.LeftArrow))
-            cursorDisplacement.x -= 1;
+            cursorDisplacement.x -= unit;
         if (Input.GetKeyDown(KeyCode.RightArrow))
-            cursorDisplacement.x += 1;
+            cursorDisplacement.x += unit;
+
         return cursorDisplacement;
     }
 
-    private List<Collider2D> _GetTouchedBlocks(Vector2 cursorDisplacement)
+    private List<Collider2D> _GetTouchedBlocks(Vector3 cursorDisplacement)
     {
         List<Collider2D> hits = new List<Collider2D>();
         foreach (var cursorBlock in _CursorBlocks)
         {
-            var hit = Physics2D.OverlapPoint((Vector2)cursorBlock.transform.position + cursorDisplacement, BlocksMask);
+            var xxx = cursorBlock.transform.localPosition + cursorDisplacement;
+
+            var hit = Physics2D.OverlapPoint(_CurrentCursor.transform.TransformPoint(xxx), BlocksMask);
             if (hit)
                 hits.Add(hit);
         }
