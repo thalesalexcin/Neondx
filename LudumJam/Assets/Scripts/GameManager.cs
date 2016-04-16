@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
@@ -51,9 +50,9 @@ public class GameManager : MonoBehaviour {
         string s;
         for (int i = 0; i < NB_CURSOR; i++)
         {
-            s = "Assets/Prefabs/Cursor";
-            s += (i + 1).ToString() + ".prefab";
-            cursorTab[i] = ((GameObject)AssetDatabase.LoadAssetAtPath(s, typeof(GameObject)));
+            s = "Cursors/Cursor";
+            s += (i + 1).ToString();
+            cursorTab[i] = (GameObject) Resources.Load(s);
             initFAC(i);
         }
     }
@@ -63,9 +62,9 @@ public class GameManager : MonoBehaviour {
         string s;
         for(int i = 0; i < NB_FAC_PAR_CURSOR; i++)
         {
-            s = "Assets/Prefabs/ValidBlocks/Fac_" + (numCursor+1).ToString() + "_";
-            s += (i+1).ToString() + ".prefab";
-            FacTab[numCursor,i] = ((GameObject)AssetDatabase.LoadAssetAtPath(s, typeof(GameObject)));
+            s = "ValidBlocks/Fac_" + (numCursor+1).ToString() + "_";
+            s += (i+1).ToString();
+            FacTab[numCursor, i] = (GameObject) Resources.Load(s);
         }
     }
 
