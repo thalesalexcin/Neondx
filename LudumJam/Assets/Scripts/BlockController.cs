@@ -57,14 +57,19 @@ public class BlockController : MonoBehaviour
 
         if (_CurrentTimer >= TurnDuration)
         {
-            _CurrentBlockSet.transform.Translate(Speed, 0, 0);
+            _CurrentBlockSet.transform.Translate(_GetSpeed(), 0, 0);
             _CurrentTimer -= TurnDuration;
         }
     }
 
     private void _ContinousTranslation()
     {
-        _CurrentBlockSet.transform.Translate(Speed * Time.deltaTime, 0, 0);
+        _CurrentBlockSet.transform.Translate(_GetSpeed() * Time.deltaTime, 0, 0);
+    }
+
+    private float _GetSpeed()
+    {
+        return Speed * SpeedMultiplier;
     }
 
     private void _CheckValidation()
@@ -94,4 +99,6 @@ public class BlockController : MonoBehaviour
 
     public bool HasValidated { get; set; }
     public bool IsValid { get; set; }
+
+    public float SpeedMultiplier { get; set; }
 }

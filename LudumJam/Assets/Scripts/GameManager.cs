@@ -13,10 +13,10 @@ public class GameManager : MonoBehaviour {
 
     // variables accessible de l'exterieur
     public uint score = 0;
-    public ushort numLevel;
+    public ushort numLevel = 1;
     public GameObject cursor;
     public GameObject Fac;
-    public float speed;
+    public float speed = 1;
     public int indiceBonus = 8;
     public byte MultiplicateurBonus = 1;
 
@@ -31,9 +31,12 @@ public class GameManager : MonoBehaviour {
     private GameObject[,] FacTab = new GameObject[NB_CURSOR, NB_FAC_PAR_CURSOR];
 
     // Use this for initialization
-    void Start () {
+    void Awake () 
+    {
         //init cursor et Fac
         initCursor();
+        cursor = cursorTab[0];
+        generateFAC(false);
     }
 	
 	// Update is called once per frame
@@ -47,7 +50,7 @@ public class GameManager : MonoBehaviour {
         string s;
         for (int i = 0; i < NB_CURSOR; i++)
         {
-            s = "D:/LUDUMJAM/LudumJam/Assets/Prefabs/Cursor";
+            s = "Assets/Prefabs/Cursor";
             s += (i + 1).ToString() + ".prefab";
             cursorTab[i] = ((GameObject)AssetDatabase.LoadAssetAtPath(s, typeof(GameObject)));
             initFAC(i);
@@ -59,8 +62,8 @@ public class GameManager : MonoBehaviour {
         string s;
         for(int i = 0; i < NB_FAC_PAR_CURSOR; i++)
         {
-            s = "D:/LUDUMJAM/LudumJam/Assets/Prefabs/Fab_" + numCursor.ToString() + "_";
-            s += i.ToString() + ".prefab";
+            s = "Assets/Prefabs/ValidBlocks/Fac_" + (numCursor+1).ToString() + "_";
+            s += (i+1).ToString() + ".prefab";
             FacTab[numCursor,i] = ((GameObject)AssetDatabase.LoadAssetAtPath(s, typeof(GameObject)));
         }
     }

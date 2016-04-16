@@ -6,16 +6,17 @@ public class GameController : MonoBehaviour
     public CursorController CursorCtrl;
     public BlockController BlockCtrl;
     public GameObject ActorsParent;
+    public GameManager GameManager;
 
-    //TODO Temporary
-    public GameObject CursorPrefab;
-    public GameObject ValidBlockSetPrefab;
+    public Transform ValidBlockSetReferencePosition;
+    public Transform BlankBlockSetReferencePosition;
 
     private GameObject _CurrentValidationBlocks;
 
     void Start()
     {
         _AddNextBlock();
+        BlockCtrl.SpeedMultiplier = GameManager.speed;
     }
 
 	// Update is called once per frame
@@ -23,6 +24,11 @@ public class GameController : MonoBehaviour
     {
         if (BlockCtrl.HasValidated)
         {
+            if (GameManager.hasNextLevel())
+                GameManager.nextLevel(BlockCtrl.IsValid);
+
+            BlockCtrl.SpeedMultiplier = GameManager.speed;
+
             _AddNextBlock();
         }    
 	}
@@ -50,12 +56,12 @@ public class GameController : MonoBehaviour
 
     private GameObject _GetNextCursor()
     {
-        return CursorPrefab;
+        return GameManager.cursor;
     }
 
     private GameObject _GetNextValidBlockSet()
     {
-        return ValidBlockSetPrefab;
+        return GameManager.Fac;
     }
 
     private void _InstantiateValidBlockSet(GameObject blockSet)
@@ -65,14 +71,14 @@ public class GameController : MonoBehaviour
 
         _CurrentValidationBlocks = Instantiate(blockSet);
         _CurrentValidationBlocks.transform.parent = ActorsParent.transform;
-        _CurrentValidationBlocks.transform.localPosition = new Vector2(30, 0);
+        _CurrentValidationBlocks.transform.position = ValidBlockSetReferencePosition.transform.position;
     }
 
     private GameObject _InstantiateBlankBlockSet(GameObject blockSet)
     {
         var blankBlockSet = Instantiate(blockSet);
         blankBlockSet.transform.parent = ActorsParent.transform;
-        blankBlockSet.transform.localPosition = Vector2.zero;
+        blankBlockSet.transform.position = BlankBlockSetReferencePosition.transform.position;
         return blankBlockSet;
     }
 }
