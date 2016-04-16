@@ -1,9 +1,10 @@
 fileFormatVersion: 2
 guid: 7fb7eb5919779ca418e06c8baf74477a
-timeCreated: 1460834086
+timeCreated: 1460837431
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: grille_objectif_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -38,7 +39,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -49,7 +50,22 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: grille_objectif_0
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 17
+        width: 232
+        height: 232
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -116, y: 116}
+        - {x: -116, y: -116}
+        - {x: 116, y: -116}
+        - {x: 116, y: 116}
     outline: []
   spritePackingTag: 
   userData: 
