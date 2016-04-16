@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour {
     public GameObject cursor;
     public GameObject Fac;
     public float speed = 1;
+    public float speedIncrementation = 1.2f;
     public int indiceBonus = 8;
     public byte MultiplicateurBonus = 1;
 
@@ -152,7 +153,7 @@ public class GameManager : MonoBehaviour {
             else // si je suis au curseur 2 je change de niveau
             {
                 numLevel++;
-                speed *= 1.2f;
+                speed *= speedIncrementation;
                 if (speed > MAX_SPEED) speed = MAX_SPEED; 
                 numCursor = 1;
                 generateFAC(false);
@@ -175,7 +176,7 @@ public class GameManager : MonoBehaviour {
             else
             {
                 numLevel++;
-                speed *= 1.2f;
+                speed *= speedIncrementation;
                 if (speed > MAX_SPEED) speed = MAX_SPEED;
                 numCursor = 1;
                 generateFAC(false);
@@ -198,7 +199,7 @@ public class GameManager : MonoBehaviour {
             else
             {
                 numLevel++;
-                speed *= 1.2f;
+                speed *= speedIncrementation;
                 if (speed > MAX_SPEED) speed = MAX_SPEED;
                 numCursor = 1;
                 generateFAC(false);
