@@ -4,28 +4,43 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class BlockController : MonoBehaviour
-{
-    private LayerMask _ValidationMask;
-    
+{    
     public bool Continuous;
     public float Speed;
     public float TurnDuration;
     
     private float _CurrentTimer;
     private List<Block> _Blocks;
+    private GameObject _CurrentBlockSet;
 
-    void Awake()
+    public LayerMask ValidationBlocksMask;
+
+    public void SetBlockSet(GameObject blockSet)
     {
-        _Blocks = GetComponentsInChildren<Block>().ToList();
-        _ValidationMask = LayerMask.NameToLayer("Validation");
+        IsValid = false;
+        HasValidated = false;
+
+        if (_CurrentBlockSet != null)
+            DestroyObject(_CurrentBlockSet);
+
+        _CurrentBlockSet = blockSet;
+        _Blocks = _CurrentBlockSet.GetComponentsInChildren<Block>().ToList();
+
+        foreach (var block in _Blocks)
+        {
+            block.Reset();
+            block.gameObject.layer = LayerMask.NameToLayer("Blocks");
+        }
     }
 
 	// Update is called once per frame
 	void Update () 
     {
-        _Move();
-
-        _CheckValidation();
+        if (_CurrentBlockSet != null)
+        {
+            _Move();
+            _CheckValidation();
+        }
 	}
 
     private void _Move()
@@ -42,14 +57,14 @@ public class BlockController : MonoBehaviour
 
         if (_CurrentTimer >= TurnDuration)
         {
-            transform.Translate(Speed,0,0);
+            _CurrentBlockSet.transform.Translate(Speed, 0, 0);
             _CurrentTimer -= TurnDuration;
         }
     }
 
     private void _ContinousTranslation()
     {
-        transform.Translate(Speed * Time.deltaTime, 0, 0);
+        _CurrentBlockSet.transform.Translate(Speed * Time.deltaTime, 0, 0);
     }
 
     private void _CheckValidation()
@@ -58,8 +73,7 @@ public class BlockController : MonoBehaviour
         int numberOfValidHits = 0;
         foreach (var block in _Blocks)
         {
-
-            var hit = Physics2D.OverlapPoint(block.transform.position, _ValidationMask);
+            var hit = Physics2D.OverlapPoint(block.transform.position, ValidationBlocksMask);
             if (hit)
             {
                 numberOfHits++;
@@ -70,10 +84,14 @@ public class BlockController : MonoBehaviour
 
         if (numberOfHits == _Blocks.Count)
         {
+            HasValidated = true;
             if (numberOfValidHits == _Blocks.Count)
-                Debug.Log("Valid");
+                IsValid = true;
             else
-                Debug.Log("Invalid");
+                IsValid = false;
         }
     }
+
+    public bool HasValidated { get; set; }
+    public bool IsValid { get; set; }
 }

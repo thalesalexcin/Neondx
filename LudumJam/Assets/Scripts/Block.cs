@@ -44,4 +44,10 @@ public class Block : MonoBehaviour
     {
         _SpriteRenderer.color = AliveColor;
     }
+
+    internal void Reset()
+    {
+        Destroyed = false;
+        _Revive();
+    }
 }
