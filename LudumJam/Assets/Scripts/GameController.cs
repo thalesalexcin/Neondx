@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour 
 {
@@ -31,6 +32,13 @@ public class GameController : MonoBehaviour
 
     public Text ScoreValue;
     public InputField InputField;
+
+    public List<Text> LeaderboardNames;
+    public List<Text> LeaderboardScore;
+    public Text YourScore;
+
+    public GameObject Leaderboard;
+    public GameObject SubmitForm;
 
     void Start()
     {
@@ -108,7 +116,16 @@ public class GameController : MonoBehaviour
                 _CurrentScoreState = ScoreState.ERROR;
             else
             {
-                
+                SubmitForm.SetActive(false);
+                Leaderboard.SetActive(true);
+
+                YourScore.text = GameManager.score.ToString().PadLeft(7, '0');
+
+                for (int i = 0; i < 5; i++)
+                {
+                    LeaderboardNames[i].text = _BDDManager.listePseudo[i+1];
+                    LeaderboardScore[i].text = _BDDManager.listeScore[i+1];
+                }
             }
         }
     }
@@ -133,6 +150,7 @@ public class GameController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Return))
         {
+            ValidBlock.Play();
             GameManager.GetComponent<BDDManager>().recordScore(InputField.text, GameManager.score);
             _CurrentScoreState = ScoreState.WAITING_SUBMISSION;
         }
