@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     const int PERTE_INDICE_BONUS = 1; // correspond a un demi cran
     const int GAIN_INDICE_BONUS = 1; //correspond a un demi cran
     const int SCORE_WIN_BASE = 500;
-    const float MAX_SPEED = 8;
+    const float MAX_SPEED = 3;
 
     // variables accessible de l'exterieur
     public float NextLevelAnimationDuration = 1;
