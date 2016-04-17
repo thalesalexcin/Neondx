@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     // constantes
     const int NB_CURSOR = 4;
     const int NB_FAC_PAR_CURSOR = 5;
-    const int MAX_INDICE_BONUS = 17;
+    const int MAX_INDICE_BONUS = 16;
     const int PERTE_INDICE_BONUS = 1; // correspond a un demi cran
     const int GAIN_INDICE_BONUS = 1; //correspond a un demi cran
     const int SCORE_WIN_BASE = 500;
