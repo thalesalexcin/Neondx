@@ -6,15 +6,21 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour {
 
+    public float FadingDuration = 2;
+
     public Image Cursor;
+
+    public Image Fader;
 
     public GameObject StartButton;
     public GameObject BlockButton;
-    public GameObject CreditsButton;    
+    public GameObject CreditsButton;
 
+    public AudioSource BackgroundMusic;
     public AudioSource TurnOn;
     public AudioSource TurnOff;
     public AudioSource CursorMove;
+    public AudioSource Select;
 
     public Sprite TurnedOnSprite;
     public Sprite TurnedOffSprite;
@@ -26,11 +32,13 @@ public class MenuManager : MonoBehaviour {
     private bool _TurnedOff;
 
     private MenuState _CurrentState;
+    private float _CurrentTimer;
 
     enum MenuState
     {
         MAIN,
-        CREDITS
+        CREDITS,
+        LOADING_LEVEL
     }
 
     void Awake()
@@ -54,23 +62,38 @@ public class MenuManager : MonoBehaviour {
                 break;
             case MenuState.CREDITS: _CreditsState();
                 break;
+            case MenuState.LOADING_LEVEL: _LoadingLevelState();
+                break;
         }
 	}
+
+    private void _LoadingLevelState()
+    {
+        _CurrentTimer += Time.deltaTime;
+
+        var percentage = _CurrentTimer / FadingDuration;
+
+        BackgroundMusic.volume = 1 - percentage;
+        _SetOpacity(Fader, percentage);
+
+        if (_CurrentTimer >= FadingDuration)
+            SceneManager.LoadScene("Level");
+    }
 
     private void _CreditsState()
     {
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
         {
-            _SetCreditsOpacity(0);
+            _SetOpacity(CreditsImage, 0);
             _CurrentState = MenuState.MAIN;
         }
     }
 
-    private void _SetCreditsOpacity(float opacity)
+    private static void _SetOpacity(Image image, float opacity)
     {
-        var color = CreditsImage.color;
+        var color = image.color;
         color.a = opacity;
-        CreditsImage.color = color;
+        image.color = color;
     }
 
     private void _MainState()
@@ -100,10 +123,12 @@ public class MenuManager : MonoBehaviour {
         switch (_CurrentIndex)
         {
             case 0: _LoadLevel();
+                Select.Play();
                 break;
             case 1: _ToggleButton();
                 break;
             case 2: _LoadCredits();
+                Select.Play();
                 break;
         }
     }
@@ -111,12 +136,13 @@ public class MenuManager : MonoBehaviour {
     private void _LoadCredits()
     {
         _CurrentState = MenuState.CREDITS;
-        _SetCreditsOpacity(1);
+        _SetOpacity(CreditsImage, 1);
     }
 
-    private static void _LoadLevel()
+    private void _LoadLevel()
     {
-        SceneManager.LoadScene("Level");
+        _CurrentState = MenuState.LOADING_LEVEL;
+        _CurrentTimer = 0;
     }
 
     private void _ToggleButton()
