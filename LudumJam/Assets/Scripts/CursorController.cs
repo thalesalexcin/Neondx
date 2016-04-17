@@ -47,8 +47,27 @@ public class CursorController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
-            foreach (var hit in hits)
-                hit.GetComponent<Block>().Toggle();
+            _Toggle(hits);
+    }
+
+    private void _Toggle(List<Collider2D> hits)
+    {
+        int destroyeds = 0;
+        int reviveds = 0;
+        foreach (var hit in hits)
+        {
+            hit.GetComponent<Block>().Toggle();
+
+            if (hit.GetComponent<Block>().Destroyed)
+                destroyeds++;
+            else
+                reviveds++;
+        }
+
+        if (destroyeds > reviveds)
+            TurnOff.Play();
+        else
+            TurnOn.Play();
     }
 
     private Vector3 _GetCursorDisplacement()
