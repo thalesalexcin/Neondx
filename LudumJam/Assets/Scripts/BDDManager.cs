@@ -6,9 +6,17 @@ public class BDDManager : MonoBehaviour
     public bool IsFinished { get; set; }
     public string Error { get; set; }
 
+    public string[] playerPosition;
     public string[] lineBoard;
     public string[] listePseudo = new string[6];
     public string[] listeScore = new string[6];
+
+
+    void Start()
+    {
+        Debug.Log("troll");
+        loadScores();
+    }
 
     IEnumerator WaitForRequest(WWW www)
     { 
@@ -40,7 +48,11 @@ public class BDDManager : MonoBehaviour
         if (www.error == null)
         {
             string s = www.text;
-            lineBoard = s.Split(';');
+
+            playerPosition = s.Split(':');
+
+
+            lineBoard = playerPosition[1].Split(';');
             int i = 0;
             foreach (string str in lineBoard)
             {
