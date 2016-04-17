@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour 
 {
+    public GameObject GameScene;
+    public GameObject ScoreScene;
+
     public CursorController CursorCtrl;
     public BlockController BlockCtrl;
     public GameManager GameManager;
@@ -151,6 +154,8 @@ public class GameController : MonoBehaviour
     private void _ChangeToScoreScene()
     {
         _CurrentSceneState = SceneState.SCORE;
+        GameScene.SetActive(false);
+        ScoreScene.SetActive(true);
         GameOver.Play();
         BackgroundMenuMusic.Play();
         BackgroundThemeMusic.Stop();

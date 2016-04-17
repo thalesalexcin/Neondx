@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     const int NB_CURSOR = 4;
     const int NB_FAC_PAR_CURSOR = 5;
     const int MAX_INDICE_BONUS = 16;
-    const int PERTE_INDICE_BONUS = 1; // correspond a un demi cran
+    const int PERTE_INDICE_BONUS = 2; // correspond a un demi cran
     const int GAIN_INDICE_BONUS = 1; //correspond a un demi cran
     const int SCORE_WIN_BASE = 500;
     const float MAX_SPEED = 3;
@@ -130,7 +130,10 @@ public class GameManager : MonoBehaviour
     // la grille precedente n'etait pas valide
     private void loose()
     {
-        indiceBonus -= PERTE_INDICE_BONUS;
+        if (indiceBonus > 8)
+            indiceBonus = 8;
+        else
+            indiceBonus -= PERTE_INDICE_BONUS;
 
         if (OnBonusIndexChanged != null)
             OnBonusIndexChanged(indiceBonus);

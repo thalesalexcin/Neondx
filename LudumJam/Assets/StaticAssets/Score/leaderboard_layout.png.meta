@@ -1,0 +1,101 @@
+fileFormatVersion: 2
+guid: 95658c25ab549d34c93ef031093b441e
+timeCreated: 1460917589
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: leaderboard_layout_0
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 50
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: leaderboard_layout_0
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 69
+        width: 741
+        height: 933
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 370.5, y: -453.5}
+        - {x: 370.5, y: 452.5}
+        - {x: 369.5, y: 456.5}
+        - {x: 364.5, y: 463.5}
+        - {x: 357.5, y: 466.5}
+        - {x: -358.5, y: 466.5}
+        - {x: -360.5, y: 465.5}
+        - {x: -367.5, y: 460.5}
+        - {x: -370.5, y: 453.5}
+        - {x: -370.5, y: -453.5}
+        - {x: -367.5, y: -460.5}
+        - {x: -364.5, y: -463.5}
+        - {x: -357.5, y: -466.5}
+        - {x: 357.5, y: -466.5}
+        - {x: 358.5, y: -465.5}
+        - {x: 360.5, y: -465.5}
+        - {x: 367.5, y: -460.5}
+      - - {x: -330.5, y: 426.5}
+        - {x: 330.5, y: 426.5}
+        - {x: 330.5, y: -426.5}
+        - {x: -330.5, y: -426.5}
+      - - {x: -320.5, y: 418.5}
+        - {x: -322.5, y: 416.5}
+        - {x: -323.5, y: 349.5}
+        - {x: -323.5, y: 341.5}
+        - {x: -322.5, y: 340.5}
+        - {x: -322.5, y: -415.5}
+        - {x: -320.5, y: -417.5}
+        - {x: 319.5, y: -417.5}
+        - {x: 321.5, y: -415.5}
+        - {x: 321.5, y: 416.5}
+        - {x: 319.5, y: 418.5}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
