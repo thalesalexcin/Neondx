@@ -19,13 +19,24 @@ public class MenuManager : MonoBehaviour {
     public Sprite TurnedOnSprite;
     public Sprite TurnedOffSprite;
     
+    public Image CreditsImage;
+
     private Image _BlockImage;
     private int _CurrentIndex;
     private bool _TurnedOff;
 
+    private MenuState _CurrentState;
+
+    enum MenuState
+    {
+        MAIN,
+        CREDITS
+    }
+
     void Awake()
     {
         _BlockImage = BlockButton.GetComponentInChildren<Image>();
+        _CurrentState = MenuState.MAIN;
     }
 
 	// Use this for initialization
@@ -37,9 +48,36 @@ public class MenuManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
+        switch (_CurrentState)
+        {
+            case MenuState.MAIN: _MainState();
+                break;
+            case MenuState.CREDITS: _CreditsState();
+                break;
+        }
+	}
+
+    private void _CreditsState()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+        {
+            _SetCreditsOpacity(0);
+            _CurrentState = MenuState.MAIN;
+        }
+    }
+
+    private void _SetCreditsOpacity(float opacity)
+    {
+        var color = CreditsImage.color;
+        color.a = opacity;
+        CreditsImage.color = color;
+    }
+
+    private void _MainState()
+    {
         _ProcessInput();
         _MoveCursor();
-	}
+    }
 
     private void _ProcessInput()
     {
@@ -70,9 +108,10 @@ public class MenuManager : MonoBehaviour {
         }
     }
 
-    private static void _LoadCredits()
+    private void _LoadCredits()
     {
-        SceneManager.LoadScene("Credits");
+        _CurrentState = MenuState.CREDITS;
+        _SetCreditsOpacity(1);
     }
 
     private static void _LoadLevel()
