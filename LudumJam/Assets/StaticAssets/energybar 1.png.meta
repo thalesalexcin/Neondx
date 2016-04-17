@@ -1,9 +1,10 @@
 fileFormatVersion: 2
-guid: 6880de1c32999d540973915cb8fdcfa2
-timeCreated: 1460838058
+guid: 3f9b540cfe3006445ab0a5571ba7aee2
+timeCreated: 1460891004
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: energybar 1_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -38,18 +39,45 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 0.001
+  spritePixelsToUnits: 50
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: energybar 1_0
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 104
+        width: 1152
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 576, y: -19}
+        - {x: 576, y: 19}
+        - {x: 573, y: 26}
+        - {x: 570, y: 29}
+        - {x: 563, y: 32}
+        - {x: -563, y: 32}
+        - {x: -570, y: 29}
+        - {x: -573, y: 26}
+        - {x: -576, y: 19}
+        - {x: -576, y: -19}
+        - {x: -573, y: -26}
+        - {x: -570, y: -29}
+        - {x: -563, y: -32}
+        - {x: 563, y: -32}
+        - {x: 570, y: -29}
+        - {x: 573, y: -26}
     outline: []
   spritePackingTag: 
   userData: 

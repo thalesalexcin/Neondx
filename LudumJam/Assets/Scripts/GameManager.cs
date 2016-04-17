@@ -1,7 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour 
+{
+    public delegate void UIValueChanged(float value);
+    public event UIValueChanged OnMultiplierChanged;
+    public event UIValueChanged OnScoreChanged;
+    public event UIValueChanged OnSpeedChanged;
+    public event UIValueChanged OnBonusIndexChanged;
+    public event UIValueChanged OnLevelChanged;
+    public event UIValueChanged OnCursorChanged;
+    public event UIValueChanged OnBlockSetChanged;
+
     // constantes
     const int NB_CURSOR = 4;
     const int NB_FAC_PAR_CURSOR = 5;
@@ -38,11 +48,6 @@ public class GameManager : MonoBehaviour {
         cursor = cursorTab[0];
         generateFAC(false);
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     private void initCursor()
     {
@@ -82,16 +87,36 @@ public class GameManager : MonoBehaviour {
     // la grille precedente etait valide
     private void win()
     {
-        score += (uint) SCORE_WIN_BASE * MultiplicateurBonus;
-        indiceBonus += GAIN_INDICE_BONUS;
+        _IncrementScore();
+        _IncrementBonusIndex();
         setMultiplicateurBonus();
         setCursor();
+    }
+
+    private void _IncrementBonusIndex()
+    {
+        indiceBonus += GAIN_INDICE_BONUS;
+        
+        if (OnBonusIndexChanged != null)
+            OnBonusIndexChanged(indiceBonus);
+    }
+
+    private void _IncrementScore()
+    {
+        score += (uint)SCORE_WIN_BASE * MultiplicateurBonus;
+
+        if (OnScoreChanged != null)
+            OnScoreChanged(score);
     }
 
     // la grille precedente n'etait pas valide
     private void loose()
     {
         indiceBonus -= PERTE_INDICE_BONUS;
+
+        if (OnBonusIndexChanged != null)
+            OnBonusIndexChanged(indiceBonus);
+
         if (indiceBonus <=0)
         {
             canContinue = false;
@@ -126,6 +151,9 @@ public class GameManager : MonoBehaviour {
         {
             MultiplicateurBonus = 16;
         }
+
+        if (OnMultiplierChanged != null)
+            OnMultiplierChanged(MultiplicateurBonus);
     }
 
 
@@ -136,87 +164,70 @@ public class GameManager : MonoBehaviour {
     // met à jour le FAC
     private void setCursor()
     {
-        if(numLevel == 1) 
+        if (!semiValidate)
         {
-            if (!semiValidate) // il faut deux coups pour passer au curseur suivant
-            {
-                semiValidate = true;
-                generateFAC(true);
-            }
-            else if(numCursor == 1) // si je suis au curseur 1 je passe au 2
-            {
-                numCursor++;
-                generateFAC(false);
-                semiValidate = false;
-            }
-            else // si je suis au curseur 2 je change de niveau
-            {
-                numLevel++;
-                speed *= speedIncrementation;
-                if (speed > MAX_SPEED) speed = MAX_SPEED; 
-                numCursor = 1;
-                generateFAC(false);
-                semiValidate = false;
-            }
+            semiValidate = true;
+            generateFAC(true);
         }
-        else if (numLevel == 2)
-        {
-            if (!semiValidate)
-            {
-                semiValidate = true;
-                generateFAC(true);
-            }
-            else if (numCursor == 1 || numCursor == 2)
-            {
-                numCursor++;
-                generateFAC(false);
-                semiValidate = false;
-            }
-            else
-            {
-                numLevel++;
-                speed *= speedIncrementation;
-                if (speed > MAX_SPEED) speed = MAX_SPEED;
-                numCursor = 1;
-                generateFAC(false);
-                semiValidate = false;
-            }
-        }
+        else if (_HasNextCursor())
+            _NextCursor();
         else
-        {
-            if (!semiValidate)
-            {
-                semiValidate = true;
-                generateFAC(true);
-            }
-            else if (numCursor == 1 || numCursor == 2 || numCursor == 3)
-            {
-                numCursor++;
-                generateFAC(false);
-                semiValidate = false;
-            }
-            else
-            {
-                numLevel++;
-                speed *= speedIncrementation;
-                if (speed > MAX_SPEED) speed = MAX_SPEED;
-                numCursor = 1;
-                generateFAC(false);
-                semiValidate = false;
-            }
-        }
-
+            _NextLevel();
+        
         cursor = cursorTab[numCursor - 1];
+    }
+
+    private bool _HasNextCursor()
+    {
+        return numCursor <= numLevel && numCursor < cursorTab.Length;
+    }
+
+    private void _NextCursor()
+    {
+        numCursor++;
+        generateFAC(false);
+        semiValidate = false;
+
+        if (OnCursorChanged != null)
+            OnCursorChanged(0);
+    }
+
+    private void _NextLevel()
+    {
+        numLevel++;
+        
+        _UpdateSpeed();
+        
+        numCursor = 1;
+        generateFAC(false);
+        semiValidate = false;
+
+        if (OnLevelChanged != null)
+            OnLevelChanged(numLevel);
+    }
+
+    private void _UpdateSpeed()
+    {
+        speed *= speedIncrementation;
+        if (speed > MAX_SPEED) 
+            speed = MAX_SPEED;
+
+        if (OnSpeedChanged != null)
+            OnSpeedChanged(speed);
     }
 
     // genere la Figure A Fabriquer selon le curseur en cours
     private void generateFAC(bool memeCursor)
     {
+        
         byte tempNumFac;
         do {
             tempNumFac = (byte)Random.Range(0, NB_FAC_PAR_CURSOR);
         } while (tempNumFac == numFac && memeCursor);
 
         Fac = FacTab[numCursor - 1, tempNumFac];
+
+        if (OnBlockSetChanged != null)
+            OnBlockSetChanged(0);
     }
 }
