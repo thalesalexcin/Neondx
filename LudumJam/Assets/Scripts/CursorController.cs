@@ -5,21 +5,25 @@ using System.Collections.Generic;
 public class CursorController : MonoBehaviour
 {
     public LayerMask BlocksMask;
+    public AudioSource MoveCursor;
+    public AudioSource TurnOff;
+    public AudioSource TurnOn;
 
     private List<Transform> _CursorBlocks;
     private GameObject _CurrentCursor;
     
     public void SetCursor(GameObject cursor)
     {
-        if (_CurrentCursor != null)
-            DestroyObject(_CurrentCursor);
-        
+        ClearCursor();
+
         _CurrentCursor = cursor;
         _CursorBlocks = _CurrentCursor.GetComponentsInChildren<Transform>().Where(c => c.gameObject != cursor).ToList();
     }
 
-    void Awake()
+    public void ClearCursor()
     {
+        if (_CurrentCursor != null)
+            DestroyObject(_CurrentCursor);
     }
 
 	// Update is called once per frame
@@ -35,7 +39,12 @@ public class CursorController : MonoBehaviour
         List<Collider2D> hits = _GetTouchedBlocks(cursorDisplacement);
 
         if (hits.Any())
+        {
+            if (cursorDisplacement != Vector3.zero)
+                MoveCursor.Play();
+                
             _CurrentCursor.transform.localPosition = _CurrentCursor.transform.localPosition + cursorDisplacement;
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
             foreach (var hit in hits)

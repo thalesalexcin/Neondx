@@ -8,7 +8,10 @@ public class BlockController : MonoBehaviour
     public bool Continuous;
     public float Speed;
     public float TurnDuration;
-    
+
+    public AudioSource ValidBlock;
+    public AudioSource InvalidBlock;
+
     private float _CurrentTimer;
     private List<Block> _Blocks;
     private GameObject _CurrentBlockSet;
@@ -17,12 +20,7 @@ public class BlockController : MonoBehaviour
 
     public void SetBlockSet(GameObject blockSet)
     {
-        IsValid = false;
-        HasValidated = false;
-
-        if (_CurrentBlockSet != null)
-            DestroyObject(_CurrentBlockSet);
-
+        ClearBlockSet();
         _CurrentBlockSet = blockSet;
         _Blocks = _CurrentBlockSet.GetComponentsInChildren<Block>().ToList();
 
@@ -95,10 +93,12 @@ public class BlockController : MonoBehaviour
         if (numberOfHits == _Blocks.Count)
         {
             HasValidated = true;
-            if (numberOfValidHits == _Blocks.Count)
-                IsValid = true;
+            IsValid = numberOfValidHits == _Blocks.Count;
+            
+            if (IsValid)
+                ValidBlock.Play();
             else
-                IsValid = false;
+                InvalidBlock.Play();
         }
     }
 
@@ -106,4 +106,13 @@ public class BlockController : MonoBehaviour
     public bool IsValid { get; set; }
 
     public float SpeedMultiplier { get; set; }
+
+    public void ClearBlockSet()
+    {
+        IsValid = false;
+        HasValidated = false;
+
+        if (_CurrentBlockSet != null)
+            DestroyObject(_CurrentBlockSet);
+    }
 }

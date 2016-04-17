@@ -22,14 +22,24 @@ public class GameManager : MonoBehaviour
     const float MAX_SPEED = 8;
 
     // variables accessible de l'exterieur
-    public uint score = 0;
-    public ushort numLevel = 1;
-    public GameObject cursor;
-    public GameObject Fac;
-    public float speed = 1;
+    public float NextLevelAnimationDuration = 1;
     public float speedIncrementation = 1.2f;
+    
+    [HideInInspector]
+    public uint score = 0;
+    [HideInInspector]
+    public ushort numLevel = 1;
+    [HideInInspector]
+    public GameObject cursor;
+    [HideInInspector]
+    public GameObject Fac;
+    [HideInInspector]
+    public float speed = 1;
+    [HideInInspector]
     public int indiceBonus = 8;
+    [HideInInspector]
     public byte MultiplicateurBonus = 1;
+
 
     // variables fonctionnement interne
     private byte numCursor = 1;
@@ -79,19 +89,23 @@ public class GameManager : MonoBehaviour
         return canContinue;
     }
 
-    public void nextLevel(bool isValid)
+    public bool nextLevel(bool isValid)
     {
-        if (isValid) win();
+        bool hasPassedLevel = false;
+        if (isValid) 
+            hasPassedLevel = win();
         else loose();
+
+        return hasPassedLevel;
     }
 
     // la grille precedente etait valide
-    private void win()
+    private bool win()
     {
         _IncrementScore();
         _IncrementBonusIndex();
         setMultiplicateurBonus();
-        setCursor();
+        return setCursor();
     }
 
     private void _IncrementBonusIndex()
@@ -167,8 +181,10 @@ public class GameManager : MonoBehaviour
     // met a jour le speed
     // met a jour le cursor
     // met à jour le FAC
-    private void setCursor()
+    private bool setCursor()
     {
+        bool hasPassedLevel = false;
+        
         if (!semiValidate)
         {
             semiValidate = true;
@@ -177,9 +193,13 @@ public class GameManager : MonoBehaviour
         else if (_HasNextCursor())
             _NextCursor();
         else
+        {
             _NextLevel();
+            hasPassedLevel = true;
+        }
         
         cursor = cursorTab[numCursor - 1];
+        return hasPassedLevel;
     }
 
     private bool _HasNextCursor()

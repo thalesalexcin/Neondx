@@ -6,8 +6,11 @@ public class UIManager : MonoBehaviour
 {
     public GameManager GameManager;
 
+    public float BlinkSpeed = 5;
+
     public Text Score;
     public Image EnergyBar;
+    public Image NextLevel;
 
     public Image X2;
     public Sprite X2_On;
@@ -41,6 +44,11 @@ public class UIManager : MonoBehaviour
         GameManager.OnSpeedChanged += GameManager_OnSpeedChanged;
     }
 
+    void GameManager_OnLevelChanged(float value)
+    {
+        
+    }
+
     void GameManager_OnSpeedChanged(float value)
     {
 
@@ -63,9 +71,27 @@ public class UIManager : MonoBehaviour
             X16.sprite = X16_On;
     }
 
-    void GameManager_OnLevelChanged(float value)
+    public void HideNextLevel()
     {
+        Color color = NextLevel.color;
+        color.a = 0;
+        NextLevel.color = color;
+        BlinkSpeed = Mathf.Abs(BlinkSpeed);
+    }
 
+    public void BlinkNextLevel()
+    {
+        Color color = NextLevel.color;
+
+        color.a += BlinkSpeed * Time.deltaTime;
+
+        if (color.a >= 1 || color.a <= 0)
+        {
+            color.a = Mathf.Clamp01(color.a);
+            BlinkSpeed *= -1;
+        }
+
+        NextLevel.color = color;
     }
 
     void GameManager_OnCursorChanged(float value)
