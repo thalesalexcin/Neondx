@@ -7,6 +7,8 @@ public class GameController : MonoBehaviour
     public GameObject GameScene;
     public GameObject ScoreScene;
 
+    public InputField InputField;
+
     public CursorController CursorCtrl;
     public BlockController BlockCtrl;
     public GameManager GameManager;
@@ -32,8 +34,9 @@ public class GameController : MonoBehaviour
     void Start()
     {
         _OldBlockAreaPosition = BlockArea.transform.position;
+        _CurrentSceneState = SceneState.SCORE;
         _CurrentState = GameState.LOADING;
-        Fader.SetOpacity(1);
+        //Fader.SetOpacity(1);
     }
     
     private GameState _CurrentState;
@@ -72,7 +75,7 @@ public class GameController : MonoBehaviour
 
     private void _ScoreState()
     {
-        
+        InputField.Select();
     }
 
     private void _PauseState()
