@@ -36,6 +36,7 @@ public class GameController : MonoBehaviour
     public List<Text> LeaderboardNames;
     public List<Text> LeaderboardScore;
     public Text YourScore;
+    public Text YourScoreLeaderboard;
 
     public GameObject Leaderboard;
     public GameObject SubmitForm;
@@ -119,7 +120,7 @@ public class GameController : MonoBehaviour
                 SubmitForm.SetActive(false);
                 Leaderboard.SetActive(true);
 
-                YourScore.text = GameManager.score.ToString().PadLeft(7, '0');
+                YourScoreLeaderboard.text = GameManager.score.ToString().PadLeft(7, '0');
 
                 for (int i = 0; i < 5; i++)
                 {
@@ -147,7 +148,8 @@ public class GameController : MonoBehaviour
     private void _SubmitingScoreState()
     {
         InputField.Select();
-        
+        YourScore.text = GameManager.score.ToString().PadLeft(7, '0');
+
         if (Input.GetKeyDown(KeyCode.Return))
         {
             ValidBlock.Play();
