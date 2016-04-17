@@ -7,8 +7,6 @@ public class GameController : MonoBehaviour
     public GameObject GameScene;
     public GameObject ScoreScene;
 
-    public InputField InputField;
-
     public CursorController CursorCtrl;
     public BlockController BlockCtrl;
     public GameManager GameManager;
@@ -31,17 +29,33 @@ public class GameController : MonoBehaviour
 
     private GameObject _CurrentValidationBlocks;
 
+    public Text ScoreValue;
+    public InputField InputField;
+
     void Start()
     {
         _OldBlockAreaPosition = BlockArea.transform.position;
-        _CurrentSceneState = SceneState.SCORE;
+        _CurrentSceneState = SceneState.GAME;
         _CurrentState = GameState.LOADING;
-        //Fader.SetOpacity(1);
+        _CurrentScoreState = ScoreState.SUBMITING;
+        _BDDManager = GameManager.GetComponent<BDDManager>();
+        Fader.SetOpacity(1);
     }
     
     private GameState _CurrentState;
+    private ScoreState _CurrentScoreState;
     private SceneState _CurrentSceneState;
     private float _CurrentTimer;
+    private BDDManager _BDDManager;
+
+    enum ScoreState
+    {
+        SUBMITING,
+        WAITING_SUBMISSION,
+        LOADING_SCORE,
+        SHOW_SCORE,
+        ERROR
+    }
 
     enum SceneState
     {
@@ -75,9 +89,55 @@ public class GameController : MonoBehaviour
 
     private void _ScoreState()
     {
-        InputField.Select();
+        switch (_CurrentScoreState)
+        {
+            case ScoreState.SUBMITING: _SubmitingScoreState();
+                break;
+            case ScoreState.WAITING_SUBMISSION: _WaitingSubmissionState();
+                break;
+            case ScoreState.LOADING_SCORE: _LoadingScoreState();
+                break;
+        }
     }
 
+    private void _LoadingScoreState()
+    {
+        if (_BDDManager.IsFinished)
+        {
+            if (_BDDManager.HasError)
+                _CurrentScoreState = ScoreState.ERROR;
+            else
+            {
+                
+            }
+        }
+    }
+
+    private void _WaitingSubmissionState()
+    {
+        if (_BDDManager.IsFinished)
+        {
+            if (_BDDManager.HasError)
+                _CurrentScoreState = ScoreState.ERROR;
+            else
+            {
+                _BDDManager.loadScores();
+                _CurrentScoreState = ScoreState.LOADING_SCORE;
+            }
+        }
+    }
+
+    private void _SubmitingScoreState()
+    {
+        InputField.Select();
+        
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            GameManager.GetComponent<BDDManager>().recordScore(InputField.text, GameManager.score);
+            _CurrentScoreState = ScoreState.WAITING_SUBMISSION;
+        }
+    }
+        
     private void _PauseState()
     {
         
@@ -156,9 +216,12 @@ public class GameController : MonoBehaviour
 
     private void _ChangeToScoreScene()
     {
+        ScoreValue.text = GameManager.score.ToString().PadLeft(7, '0');
+        
         _CurrentSceneState = SceneState.SCORE;
         GameScene.SetActive(false);
         ScoreScene.SetActive(true);
+        
         GameOver.Play();
         BackgroundMenuMusic.Play();
         BackgroundThemeMusic.Stop();
