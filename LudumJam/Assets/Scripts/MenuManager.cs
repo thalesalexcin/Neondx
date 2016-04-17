@@ -74,7 +74,7 @@ public class MenuManager : MonoBehaviour {
         var percentage = _CurrentTimer / FadingDuration;
 
         BackgroundMusic.volume = 1 - percentage;
-        _SetOpacity(Fader, percentage);
+        Fader.SetOpacity(percentage);
 
         if (_CurrentTimer >= FadingDuration)
             SceneManager.LoadScene("Level");
@@ -84,16 +84,9 @@ public class MenuManager : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
         {
-            _SetOpacity(CreditsImage, 0);
+            CreditsImage.SetOpacity(0);
             _CurrentState = MenuState.MAIN;
         }
-    }
-
-    private static void _SetOpacity(Image image, float opacity)
-    {
-        var color = image.color;
-        color.a = opacity;
-        image.color = color;
     }
 
     private void _MainState()
@@ -136,7 +129,7 @@ public class MenuManager : MonoBehaviour {
     private void _LoadCredits()
     {
         _CurrentState = MenuState.CREDITS;
-        _SetOpacity(CreditsImage, 1);
+        CreditsImage.SetOpacity(1);
     }
 
     private void _LoadLevel()

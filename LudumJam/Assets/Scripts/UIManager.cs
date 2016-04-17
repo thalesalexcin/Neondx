@@ -7,7 +7,9 @@ public class UIManager : MonoBehaviour
     public GameManager GameManager;
 
     public float BlinkSpeed = 5;
+    public AudioSource Countdown;
 
+    public Text Counter;
     public Text Score;
     public Image EnergyBar;
     public Image NextLevel;
@@ -71,11 +73,24 @@ public class UIManager : MonoBehaviour
             X16.sprite = X16_On;
     }
 
+    public void SetCounter(float counter)
+    {
+        string oldText = Counter.text;
+        string newValue = Mathf.Ceil(counter).ToString();
+
+        if (oldText != newValue)
+        {
+            if (counter <= 0)
+                Counter.text = string.Empty;
+            else
+                Counter.text = newValue;
+            Countdown.Play();
+        }
+    }
+
     public void HideNextLevel()
     {
-        Color color = NextLevel.color;
-        color.a = 0;
-        NextLevel.color = color;
+        NextLevel.SetOpacity(0);
         BlinkSpeed = Mathf.Abs(BlinkSpeed);
     }
 

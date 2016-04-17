@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour 
 {
@@ -8,7 +9,11 @@ public class GameController : MonoBehaviour
     public GameManager GameManager;
     public UIManager UIManager;
 
+    public float EnterFadeDuration = 1;
+    public Image Fader;
+
     public AudioSource LevelUp;
+    public AudioSource BackgroundThemeMusic;
     public GameObject ValidArea;
     public GameObject BlockArea;
 
@@ -19,7 +24,8 @@ public class GameController : MonoBehaviour
     void Start()
     {
         _OldBlockAreaPosition = BlockArea.transform.position;
-        _CurrentState = GameState.START;
+        _CurrentState = GameState.LOADING;
+        Fader.SetOpacity(1);
     }
 
     private GameState _CurrentState;
@@ -27,6 +33,7 @@ public class GameController : MonoBehaviour
 
     enum GameState
     {
+        LOADING,
         START,
         MOVING,
         ANIMATE_NEXT_LEVEL,
@@ -38,44 +45,86 @@ public class GameController : MonoBehaviour
     {
         switch (_CurrentState)
         {
-            case GameState.START:
-                    _AddNextBlock();
-                    BlockCtrl.SpeedMultiplier = GameManager.speed;
-                    _CurrentState = GameState.MOVING;
+            case GameState.LOADING: _LoadState();
                 break;
-            case GameState.MOVING:
-                    if (BlockCtrl.HasValidated)
-                    {
-                        var hasPassedLevel = GameManager.nextLevel(BlockCtrl.IsValid);
-
-                        _ClearLevel();
-
-                        if (hasPassedLevel)
-                        {
-                            _CurrentState = GameState.ANIMATE_NEXT_LEVEL;
-                            _CurrentTimer = 0;
-                            LevelUp.Play();
-                        }
-                        else
-                            _CurrentState = GameState.GENERATE_NEXT_BLOCK;
-                    }
+            case GameState.START: _StartState();
                 break;
-            case GameState.GENERATE_NEXT_BLOCK:
-                    BlockCtrl.SpeedMultiplier = GameManager.speed;
-                    _AddNextBlock();
-                    _CurrentState = GameState.MOVING;
+            case GameState.MOVING: _MoveState();
                 break;
-            case GameState.ANIMATE_NEXT_LEVEL:
-                    _CurrentTimer += Time.deltaTime;
-                    UIManager.BlinkNextLevel();
-                    if (_CurrentTimer >= GameManager.NextLevelAnimationDuration)
-                    {
-                        UIManager.HideNextLevel();
-                        _CurrentState = GameState.GENERATE_NEXT_BLOCK;
-                    }
+            case GameState.GENERATE_NEXT_BLOCK: _GenerateBlockState();
+                break;
+            case GameState.ANIMATE_NEXT_LEVEL: _AnimateNextLevelState();
                 break;
         }
 	}
+
+    private void _AnimateNextLevelState()
+    {
+        _CurrentTimer += Time.deltaTime;
+        UIManager.BlinkNextLevel();
+        if (_CurrentTimer >= GameManager.NextLevelAnimationDuration)
+        {
+            UIManager.HideNextLevel();
+            _CurrentState = GameState.GENERATE_NEXT_BLOCK;
+        }
+    }
+
+    private void _GenerateBlockState()
+    {
+        BlockCtrl.SpeedMultiplier = GameManager.speed;
+        _AddNextBlock();
+        _CurrentState = GameState.MOVING;
+    }
+
+    private void _MoveState()
+    {
+
+        if (BlockCtrl.HasValidated)
+        {
+            var hasPassedLevel = GameManager.nextLevel(BlockCtrl.IsValid);
+
+            _ClearLevel();
+
+            if (hasPassedLevel)
+            {
+                _CurrentState = GameState.ANIMATE_NEXT_LEVEL;
+                _CurrentTimer = 0;
+                LevelUp.Play();
+            }
+            else
+                _CurrentState = GameState.GENERATE_NEXT_BLOCK;
+        }
+    }
+
+    private void _LoadState()
+    {
+        _CurrentTimer += Time.deltaTime;
+
+        var percentage = _CurrentTimer / EnterFadeDuration;
+
+        Fader.SetOpacity(1 - percentage);
+
+        if (_CurrentTimer >= EnterFadeDuration)
+        {
+            _CurrentTimer = 3;
+            _CurrentState = GameState.START;
+        }
+    }
+
+    private void _StartState()
+    {
+        _CurrentTimer -= Time.deltaTime;
+
+        UIManager.SetCounter(_CurrentTimer);
+
+        if (_CurrentTimer <= 0)
+        {
+            BackgroundThemeMusic.Play();
+            _AddNextBlock();
+            BlockCtrl.SpeedMultiplier = GameManager.speed;
+            _CurrentState = GameState.MOVING;
+        }
+    }
 
     private void _AddNextBlock()
     {
