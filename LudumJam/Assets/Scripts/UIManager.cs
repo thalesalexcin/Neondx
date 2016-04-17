@@ -83,8 +83,10 @@ public class UIManager : MonoBehaviour
             if (counter <= 0)
                 Counter.text = string.Empty;
             else
+            {
                 Counter.text = newValue;
-            Countdown.Play();
+                Countdown.Play();
+            }
         }
     }
 

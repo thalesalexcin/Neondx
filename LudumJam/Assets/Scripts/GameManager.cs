@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public bool hasNextLevel()
+    public bool HasEnergyBar()
     {
         return canContinue;
     }
@@ -114,7 +114,6 @@ public class GameManager : MonoBehaviour
         {
             indiceBonus += GAIN_INDICE_BONUS;
         }
-        
         
         if (OnBonusIndexChanged != null)
             OnBonusIndexChanged(indiceBonus);

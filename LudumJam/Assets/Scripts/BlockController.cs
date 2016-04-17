@@ -9,9 +9,6 @@ public class BlockController : MonoBehaviour
     public float Speed;
     public float TurnDuration;
 
-    public AudioSource ValidBlock;
-    public AudioSource InvalidBlock;
-
     private float _CurrentTimer;
     private List<Block> _Blocks;
     private GameObject _CurrentBlockSet;
@@ -94,11 +91,6 @@ public class BlockController : MonoBehaviour
         {
             HasValidated = true;
             IsValid = numberOfValidHits == _Blocks.Count;
-            
-            if (IsValid)
-                ValidBlock.Play();
-            else
-                InvalidBlock.Play();
         }
     }
 

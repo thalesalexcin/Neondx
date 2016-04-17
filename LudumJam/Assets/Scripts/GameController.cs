@@ -14,6 +14,11 @@ public class GameController : MonoBehaviour
 
     public AudioSource LevelUp;
     public AudioSource BackgroundThemeMusic;
+    public AudioSource BackgroundMenuMusic;
+    public AudioSource GameOver;
+    public AudioSource ValidBlock;
+    public AudioSource InvalidBlock;
+
     public GameObject ValidArea;
     public GameObject BlockArea;
 
@@ -27,9 +32,17 @@ public class GameController : MonoBehaviour
         _CurrentState = GameState.LOADING;
         Fader.SetOpacity(1);
     }
-
+    
     private GameState _CurrentState;
+    private SceneState _CurrentSceneState;
     private float _CurrentTimer;
+
+    enum SceneState
+    {
+        GAME,
+        PAUSE,
+        SCORE,
+    }
 
     enum GameState
     {
@@ -42,6 +55,29 @@ public class GameController : MonoBehaviour
 
 	// Update is called once per frame
 	void Update () 
+    {
+        switch (_CurrentSceneState)
+        {
+            case SceneState.GAME: _GameState();
+                break;
+            case SceneState.PAUSE: _PauseState();
+                break;
+            case SceneState.SCORE: _ScoreState();
+                break;
+        }
+	}
+
+    private void _ScoreState()
+    {
+        
+    }
+
+    private void _PauseState()
+    {
+        
+    }
+
+    private void _GameState()
     {
         switch (_CurrentState)
         {
@@ -56,7 +92,7 @@ public class GameController : MonoBehaviour
             case GameState.ANIMATE_NEXT_LEVEL: _AnimateNextLevelState();
                 break;
         }
-	}
+    }
 
     private void _AnimateNextLevelState()
     {
@@ -83,17 +119,41 @@ public class GameController : MonoBehaviour
         {
             var hasPassedLevel = GameManager.nextLevel(BlockCtrl.IsValid);
 
-            _ClearLevel();
-
-            if (hasPassedLevel)
-            {
-                _CurrentState = GameState.ANIMATE_NEXT_LEVEL;
-                _CurrentTimer = 0;
-                LevelUp.Play();
-            }
+            if (GameManager.HasEnergyBar())
+                _ContinueGame(hasPassedLevel);
             else
-                _CurrentState = GameState.GENERATE_NEXT_BLOCK;
+                _ChangeToScoreScene();
         }
+    }
+
+    private void _ContinueGame(bool hasPassedLevel)
+    {
+        var isValid = BlockCtrl.IsValid;
+        _ClearLevel();
+
+        if (hasPassedLevel)
+        {
+            _CurrentState = GameState.ANIMATE_NEXT_LEVEL;
+            _CurrentTimer = 0;
+            LevelUp.Play();
+        }
+        else
+        {
+            if (isValid)
+                ValidBlock.Play();
+            else
+                InvalidBlock.Play();
+
+            _CurrentState = GameState.GENERATE_NEXT_BLOCK;
+        }
+    }
+
+    private void _ChangeToScoreScene()
+    {
+        _CurrentSceneState = SceneState.SCORE;
+        GameOver.Play();
+        BackgroundMenuMusic.Play();
+        BackgroundThemeMusic.Stop();
     }
 
     private void _LoadState()
