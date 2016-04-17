@@ -11,13 +11,6 @@ public class BDDManager : MonoBehaviour
     public string[] listePseudo = new string[6];
     public string[] listeScore = new string[6];
 
-
-    void Start()
-    {
-        Debug.Log("troll");
-        loadScores();
-    }
-
     IEnumerator WaitForRequest(WWW www)
     { 
         while (!www.isDone)

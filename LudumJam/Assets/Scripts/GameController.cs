@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameController : MonoBehaviour 
 {
@@ -30,10 +32,8 @@ public class GameController : MonoBehaviour
 
     private GameObject _CurrentValidationBlocks;
 
-    public Text ScoreValue;
     public InputField InputField;
 
-    public List<Text> LeaderboardNames;
     public List<Text> LeaderboardScore;
     public Text YourScore;
     public Text YourScoreLeaderboard;
@@ -63,7 +63,8 @@ public class GameController : MonoBehaviour
         WAITING_SUBMISSION,
         LOADING_SCORE,
         SHOW_SCORE,
-        ERROR
+        ERROR,
+        WAIT_USER
     }
 
     enum SceneState
@@ -106,7 +107,15 @@ public class GameController : MonoBehaviour
                 break;
             case ScoreState.LOADING_SCORE: _LoadingScoreState();
                 break;
+            case ScoreState.WAIT_USER: _WaitingUserState();
+                break;
         }
+    }
+
+    private void _WaitingUserState()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
+            SceneManager.LoadScene("Menu");
     }
 
     private void _LoadingScoreState()
@@ -120,13 +129,12 @@ public class GameController : MonoBehaviour
                 SubmitForm.SetActive(false);
                 Leaderboard.SetActive(true);
 
-                YourScoreLeaderboard.text = GameManager.score.ToString().PadLeft(7, '0');
+                YourScoreLeaderboard.text = string.Concat(_BDDManager.playerPosition[0], " - ", InputField.text.PadRight(6,' '), " - ", GameManager.score.ToString().PadLeft(7, '0'));
 
                 for (int i = 0; i < 5; i++)
-                {
-                    LeaderboardNames[i].text = _BDDManager.listePseudo[i+1];
-                    LeaderboardScore[i].text = _BDDManager.listeScore[i+1];
-                }
+                    LeaderboardScore[i].text = string.Concat((i + 1).ToString(), " - ", _BDDManager.listePseudo[i + 1].Replace(" ", "").Replace("*",""), " - ", _BDDManager.listeScore[i + 1]);
+
+                _CurrentScoreState = ScoreState.WAIT_USER;
             }
         }
     }
@@ -148,14 +156,17 @@ public class GameController : MonoBehaviour
     private void _SubmitingScoreState()
     {
         InputField.Select();
+
         YourScore.text = GameManager.score.ToString().PadLeft(7, '0');
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && InputField.text.Length >= 1)
         {
             ValidBlock.Play();
             GameManager.GetComponent<BDDManager>().recordScore(InputField.text, GameManager.score);
             _CurrentScoreState = ScoreState.WAITING_SUBMISSION;
         }
+        else
+            EventSystem.current.SetSelectedGameObject(InputField.gameObject);
     }
         
     private void _PauseState()
@@ -200,7 +211,6 @@ public class GameController : MonoBehaviour
 
     private void _MoveState()
     {
-
         if (BlockCtrl.HasValidated)
         {
             var hasPassedLevel = GameManager.nextLevel(BlockCtrl.IsValid);
@@ -235,9 +245,7 @@ public class GameController : MonoBehaviour
     }
 
     private void _ChangeToScoreScene()
-    {
-        ScoreValue.text = GameManager.score.ToString().PadLeft(7, '0');
-        
+    {        
         _CurrentSceneState = SceneState.SCORE;
         GameScene.SetActive(false);
         ScoreScene.SetActive(true);
@@ -345,5 +353,10 @@ public class GameController : MonoBehaviour
         blankBlockSet.transform.localPosition = Vector3.zero;
         blankBlockSet.transform.localScale = Vector3.one;
         return blankBlockSet;
+    }
+
+    public void OnValueChanged(string newValue)
+    {
+        InputField.text = newValue.Replace(" ", "_");
     }
 }
