@@ -41,6 +41,8 @@ public class GameController : MonoBehaviour
     public GameObject Leaderboard;
     public GameObject SubmitForm;
 
+    public List<Image> Tutorial;
+
     void Start()
     {
         _OldBlockAreaPosition = BlockArea.transform.position;
@@ -56,6 +58,7 @@ public class GameController : MonoBehaviour
     private SceneState _CurrentSceneState;
     private float _CurrentTimer;
     private BDDManager _BDDManager;
+    private int _CurrentTutorialIndex;
 
     enum ScoreState
     {
@@ -77,6 +80,7 @@ public class GameController : MonoBehaviour
     enum GameState
     {
         LOADING,
+        TUTORIAL,
         START,
         MOVING,
         ANIMATE_NEXT_LEVEL,
@@ -179,6 +183,8 @@ public class GameController : MonoBehaviour
         {
             case GameState.LOADING: _LoadState();
                 break;
+            case GameState.TUTORIAL: _TutorialState();
+                break;
             case GameState.START: _StartState();
                 break;
             case GameState.MOVING: _MoveState();
@@ -187,6 +193,20 @@ public class GameController : MonoBehaviour
                 break;
             case GameState.ANIMATE_NEXT_LEVEL: _AnimateNextLevelState();
                 break;
+        }
+    }
+
+    private void _TutorialState()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+        {
+            Tutorial[_CurrentTutorialIndex].SetOpacity(0);
+            _CurrentTutorialIndex++;
+
+            if (_CurrentTutorialIndex < Tutorial.Count)
+                Tutorial[_CurrentTutorialIndex].SetOpacity(1);
+            else
+                _CurrentState = GameState.START;
         }
     }
 
@@ -265,7 +285,13 @@ public class GameController : MonoBehaviour
         if (_CurrentTimer >= EnterFadeDuration)
         {
             _CurrentTimer = 3;
-            _CurrentState = GameState.START;
+            if(Tutorial.Count >= 1)
+            {
+                _CurrentState = GameState.TUTORIAL;
+                Tutorial[_CurrentTutorialIndex].SetOpacity(1);
+            }
+            else
+                _CurrentState = GameState.START;
         }
     }
 
