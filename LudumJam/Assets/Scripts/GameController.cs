@@ -214,15 +214,17 @@ public class GameController : MonoBehaviour
 
     private void _TutorialState()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+        _CurrentTimer += Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || _CurrentTimer >= 2)
         {
+            _CurrentTimer = 0;
             Tutorial[_CurrentTutorialIndex].SetOpacity(0);
             _CurrentTutorialIndex++;
 
             if (_CurrentTutorialIndex < Tutorial.Count)
                 Tutorial[_CurrentTutorialIndex].SetOpacity(1);
             else
-                _CurrentState = GameState.START;
+                _SetStartState();
         }
     }
 
@@ -300,15 +302,24 @@ public class GameController : MonoBehaviour
 
         if (_CurrentTimer >= EnterFadeDuration)
         {
-            _CurrentTimer = 3;
-            if(Tutorial.Count >= 1)
-            {
-                _CurrentState = GameState.TUTORIAL;
-                Tutorial[_CurrentTutorialIndex].SetOpacity(1);
-            }
+            if (Tutorial.Count >= 1)
+                _SetTutorialState();
             else
-                _CurrentState = GameState.START;
+                _SetStartState();
         }
+    }
+
+    private void _SetTutorialState()
+    {
+        _CurrentState = GameState.TUTORIAL;
+        _CurrentTimer = 0;
+        Tutorial[_CurrentTutorialIndex].SetOpacity(1);
+    }
+
+    private void _SetStartState()
+    {
+        _CurrentTimer = 3;
+        _CurrentState = GameState.START;
     }
 
     private void _StartState()
