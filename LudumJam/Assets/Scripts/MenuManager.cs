@@ -4,7 +4,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class MenuManager : MonoBehaviour {
+public class MenuManager : MonoBehaviour 
+{
 
     public float FadingDuration = 2;
 
@@ -31,30 +32,30 @@ public class MenuManager : MonoBehaviour {
     private int _CurrentIndex;
     private bool _TurnedOff;
 
-    private MenuState _CurrentState;
-    private float _CurrentTimer;
+    protected MenuState _CurrentState;
+    protected float _CurrentTimer;
 
-    enum MenuState
+    protected enum MenuState
     {
         MAIN,
         CREDITS,
         LOADING_LEVEL
     }
 
-    void Awake()
+    protected virtual void Awake()
     {
         _BlockImage = BlockButton.GetComponentInChildren<Image>();
         _CurrentState = MenuState.MAIN;
     }
 
 	// Use this for initialization
-	void Start () 
+    protected virtual void Start() 
     {
         _CurrentIndex = 1;
 	}
 	
 	// Update is called once per frame
-	void Update () 
+    protected virtual void Update() 
     {
         switch (_CurrentState)
         {
@@ -80,7 +81,7 @@ public class MenuManager : MonoBehaviour {
             SceneManager.LoadScene("Level");
     }
 
-    private void _CreditsState()
+    protected virtual void _CreditsState()
     {
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
         {
@@ -126,7 +127,7 @@ public class MenuManager : MonoBehaviour {
         }
     }
 
-    private void _LoadCredits()
+    protected virtual void _LoadCredits()
     {
         _CurrentState = MenuState.CREDITS;
         CreditsImage.SetOpacity(1);

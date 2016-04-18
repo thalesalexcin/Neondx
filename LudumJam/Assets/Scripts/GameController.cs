@@ -114,8 +114,7 @@ public class GameController : MonoBehaviour
 
     private void _WaitingUserState()
     {
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
-            SceneManager.LoadScene("Menu");
+        this.gameObject.SetActive(false);
     }
 
     private void _LoadingScoreState()
