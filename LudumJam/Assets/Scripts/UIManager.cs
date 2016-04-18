@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public float BlinkSpeed = 5;
     public AudioSource Countdown;
 
+    public Text LevelCounter;
     public Text Counter;
     public Text Score;
     public Image EnergyBar;
@@ -48,7 +49,7 @@ public class UIManager : MonoBehaviour
 
     void GameManager_OnLevelChanged(float value)
     {
-        
+        LevelCounter.text = string.Concat("Level ", value+1);
     }
 
     void GameManager_OnSpeedChanged(float value)

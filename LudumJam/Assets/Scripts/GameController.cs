@@ -43,6 +43,8 @@ public class GameController : MonoBehaviour
 
     public List<Image> Tutorial;
 
+    public Image ErrorScreen;
+
     void Start()
     {
         _OldBlockAreaPosition = BlockArea.transform.position;
@@ -113,7 +115,15 @@ public class GameController : MonoBehaviour
                 break;
             case ScoreState.WAIT_USER: _WaitingUserState();
                 break;
+            case ScoreState.ERROR: _ErrorState();
+                break;
         }
+    }
+
+    private void _ErrorState()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
+            SceneManager.LoadScene("Menu");
     }
 
     private void _WaitingUserState()
@@ -126,13 +136,13 @@ public class GameController : MonoBehaviour
         if (_BDDManager.IsFinished)
         {
             if (_BDDManager.HasError)
-                _CurrentScoreState = ScoreState.ERROR;
+                _SetErrorScreen();
             else
             {
                 SubmitForm.SetActive(false);
                 Leaderboard.SetActive(true);
 
-                YourScoreLeaderboard.text = string.Concat(_BDDManager.playerPosition[0], " - ", InputField.text.PadRight(6,' '), " - ", GameManager.score.ToString().PadLeft(7, '0'));
+                YourScoreLeaderboard.text = string.Concat(_BDDManager.playerPosition[0], " - ", InputField.text, " - ", GameManager.score.ToString().PadLeft(7, '0'));
 
                 for (int i = 0; i < 5; i++)
                     LeaderboardScore[i].text = string.Concat((i + 1).ToString(), " - ", _BDDManager.listePseudo[i + 1].Replace(" ", "").Replace("*",""), " - ", _BDDManager.listeScore[i + 1]);
@@ -147,13 +157,19 @@ public class GameController : MonoBehaviour
         if (_BDDManager.IsFinished)
         {
             if (_BDDManager.HasError)
-                _CurrentScoreState = ScoreState.ERROR;
+                _SetErrorScreen();
             else
             {
                 _BDDManager.loadScores();
                 _CurrentScoreState = ScoreState.LOADING_SCORE;
             }
         }
+    }
+
+    private void _SetErrorScreen()
+    {
+        ErrorScreen.gameObject.SetActive(true);
+        _CurrentScoreState = ScoreState.ERROR;
     }
 
     private void _SubmitingScoreState()
